@@ -27,9 +27,9 @@ class NewsRepositoryImpl(
     }
 
     // override Domain Layer -> repository -> NewsRepository Interface functions below:
-    override suspend fun getNewsHeadlines(): Resource<APIResponse> {
+    override suspend fun getNewsHeadlines(country: String, page: Int): Resource<APIResponse> {
         // convert response data coming from NewsRemoteDataSource Interface to Resource<APIResponse>
-        return responseToResource(newsRemoteDataSource.getTopHeadlines())
+        return responseToResource(newsRemoteDataSource.getTopHeadlines(country, page))
     }
 
     override suspend fun getSearchedNews(searchQuery: String): Resource<APIResponse> {
