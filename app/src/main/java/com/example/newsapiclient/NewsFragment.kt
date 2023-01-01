@@ -33,7 +33,9 @@ class NewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         fragmentNewsBinding = FragmentNewsBinding.bind(view)
+
         viewModel = (activity as MainActivity).viewModel
+        newsAdapter = (activity as MainActivity).newsAdapter
 
         country = (activity as MainActivity).applicationContext.resources.configuration.locale.country
 
@@ -43,7 +45,7 @@ class NewsFragment : Fragment() {
 
     private fun initRecyclerView() {
         fragmentNewsBinding.rvNews.apply {
-            adapter = NewsAdapter()
+            adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
     }
