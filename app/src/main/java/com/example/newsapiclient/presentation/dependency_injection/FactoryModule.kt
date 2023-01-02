@@ -1,10 +1,7 @@
 package com.example.newsapiclient.presentation.dependency_injection
 
 import android.app.Application
-import com.example.newsapiclient.domain.use_case.GetNewsHeadlinesUseCase
-import com.example.newsapiclient.domain.use_case.GetSavedNewsUseCase
-import com.example.newsapiclient.domain.use_case.GetSearchedNewsUseCase
-import com.example.newsapiclient.domain.use_case.SaveNewsUseCase
+import com.example.newsapiclient.domain.use_case.*
 import com.example.newsapiclient.presentation.viewmodel.NewsViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -23,14 +20,16 @@ class FactoryModule {
         getNewsHeadlinesUseCase: GetNewsHeadlinesUseCase,
         getSearchedNewsUseCase: GetSearchedNewsUseCase,
         saveNewsUseCase: SaveNewsUseCase,
-        getSavedNewsUseCase: GetSavedNewsUseCase
+        getSavedNewsUseCase: GetSavedNewsUseCase,
+        deleteSavedNewsUseCase: DeleteSavedNewsUseCase
     ): NewsViewModelFactory{
         return NewsViewModelFactory(
             app,
             getNewsHeadlinesUseCase,
             getSearchedNewsUseCase,
             saveNewsUseCase,
-            getSavedNewsUseCase
+            getSavedNewsUseCase,
+            deleteSavedNewsUseCase
         )
     }
 }

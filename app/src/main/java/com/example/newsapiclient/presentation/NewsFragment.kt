@@ -1,6 +1,5 @@
 package com.example.newsapiclient.presentation
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,13 +45,17 @@ class NewsFragment : Fragment() {
         country = (activity as MainActivity).applicationContext.resources.configuration.locale.country
 
         newsAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("selected_article",it)
+            if (it.equals(null)){
+                Toast.makeText(activity, "No news available.", Toast.LENGTH_LONG).show()
+            }else{
+                val bundle = Bundle().apply {
+                    putSerializable("selected_article",it)
+                }
+                findNavController().navigate(
+                    R.id.action_newsFragment_to_infoFragment,
+                    bundle
+                )
             }
-            findNavController().navigate(
-                R.id.action_newsFragment_to_infoFragment,
-                bundle
-            )
         }
         initRecyclerView()
         viewNewsList()

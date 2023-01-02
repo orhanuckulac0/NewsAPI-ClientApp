@@ -1,16 +1,21 @@
 package com.example.newsapiclient.presentation
 
+import android.content.ClipData.Item
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapiclient.R
 import com.example.newsapiclient.databinding.FragmentSavedBinding
 import com.example.newsapiclient.presentation.adapter.NewsAdapter
 import com.example.newsapiclient.presentation.viewmodel.NewsViewModel
+import com.google.android.material.snackbar.Snackbar
+
 
 class SavedFragment : Fragment() {
 
@@ -44,11 +49,30 @@ class SavedFragment : Fragment() {
         }
 
         initRecyclerView()
+        viewSavedNewsList()
 
-        if (view != null){
-            viewModel.getSavedNews().observe(viewLifecycleOwner){
-                newsAdapter.differ.submitList(it)
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder,
+            ): Boolean {
+                return true
             }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val article = newsAdapter.differ.currentList[position]
+                viewModel.deleteSavedNews(article)
+                Snackbar.make(view, "News Deleted Successfully", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo"){
+                        viewModel.saveArticle(article)
+                    }
+                }.show()
+            }
+        }
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(fragmentSavedBinding.rvSavedNews)
         }
     }
 
@@ -56,6 +80,14 @@ class SavedFragment : Fragment() {
         fragmentSavedBinding.rvSavedNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
+        }
+    }
+
+    private fun viewSavedNewsList(){
+        if (view != null){
+            viewModel.getSavedNews().observe(viewLifecycleOwner){
+                newsAdapter.differ.submitList(it)
+            }
         }
     }
 }
