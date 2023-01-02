@@ -9,9 +9,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.newsapiclient.data.model.APIResponse
+import com.example.newsapiclient.data.model.Article
 import com.example.newsapiclient.data.util.Resource
+import com.example.newsapiclient.domain.use_case.DeleteSavedNewsUseCase
 import com.example.newsapiclient.domain.use_case.GetNewsHeadlinesUseCase
 import com.example.newsapiclient.domain.use_case.GetSearchedNewsUseCase
+import com.example.newsapiclient.domain.use_case.SaveNewsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,11 +26,13 @@ import kotlinx.coroutines.launch
 class NewsViewModel(
     private val app:Application,
     private val getNewsHeadlinesUseCase: GetNewsHeadlinesUseCase,
-    private val getSearchedNewsUseCase: GetSearchedNewsUseCase
+    private val getSearchedNewsUseCase: GetSearchedNewsUseCase,
+    private val saveNewsUseCase: SaveNewsUseCase
     ): AndroidViewModel(app) {
 
     val newsHeadLines : MutableLiveData<Resource<APIResponse>> = MutableLiveData()
     val searchedNews: MutableLiveData<Resource<APIResponse>> = MutableLiveData()
+    val savedNews: MutableLiveData<Article> = MutableLiveData()
 
     fun getNewsHeadLines(country: String, page: Int) = viewModelScope.launch(Dispatchers.IO){
         // use postValue instead of setValue when working with background thread
@@ -89,5 +94,10 @@ class NewsViewModel(
         }catch (e: Exception){
             searchedNews.postValue(Resource.Error(e.message.toString()))
         }
+    }
+
+    // save article to db
+    fun saveArticle(article: Article) = viewModelScope.launch(Dispatchers.IO){
+        saveNewsUseCase.execute(article)
     }
 }

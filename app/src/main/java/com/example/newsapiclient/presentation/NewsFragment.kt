@@ -1,4 +1,4 @@
-package com.example.newsapiclient
+package com.example.newsapiclient.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newsapiclient.R
 import com.example.newsapiclient.data.util.Resource
 import com.example.newsapiclient.databinding.FragmentNewsBinding
-import com.example.newsapiclient.presentation.MainActivity
 import com.example.newsapiclient.presentation.adapter.NewsAdapter
 import com.example.newsapiclient.presentation.viewmodel.NewsViewModel
 import kotlinx.coroutines.MainScope
