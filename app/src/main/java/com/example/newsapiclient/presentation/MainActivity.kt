@@ -17,10 +17,8 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: NewsViewModel
-    @Inject
-    lateinit var factory: NewsViewModelFactory
-    @Inject
-    lateinit var newsAdapter: NewsAdapter
+    @Inject lateinit var factory: NewsViewModelFactory
+    @Inject lateinit var newsAdapter: NewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

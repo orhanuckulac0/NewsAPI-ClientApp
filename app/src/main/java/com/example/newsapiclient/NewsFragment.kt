@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapiclient.data.util.Resource
 import com.example.newsapiclient.databinding.FragmentNewsBinding
@@ -19,7 +20,7 @@ class NewsFragment : Fragment() {
     private lateinit var fragmentNewsBinding: FragmentNewsBinding
     private lateinit var newsAdapter: NewsAdapter
     private lateinit var country: String
-    private var page = 1
+    private var pageSize = 100
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +40,15 @@ class NewsFragment : Fragment() {
 
         country = (activity as MainActivity).applicationContext.resources.configuration.locale.country
 
+        newsAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("selected_article",it)
+            }
+            findNavController().navigate(
+                R.id.action_newsFragment_to_infoFragment,
+                bundle
+            )
+        }
         initRecyclerView()
         viewNewsList()
     }
@@ -51,7 +61,7 @@ class NewsFragment : Fragment() {
     }
 
     private fun viewNewsList() {
-        viewModel.getNewsHeadLines(country, page)
+        viewModel.getNewsHeadLines(country, pageSize)
 
         viewModel.newsHeadLines.observe(viewLifecycleOwner){response->
             when(response) {
@@ -80,6 +90,6 @@ class NewsFragment : Fragment() {
     }
 
     private fun hideProgressBar(){
-        fragmentNewsBinding.progressBar.visibility = View.GONE
+        fragmentNewsBinding.progressBar.visibility = View.INVISIBLE
     }
 }

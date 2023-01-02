@@ -2,6 +2,7 @@ package com.example.newsapiclient.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,18 +28,6 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
     // will signal the adapter of changes between submitted lists
     val differ = AsyncListDiffer(this, callback)
 
-    inner class NewsViewHolder(private val binding: NewsListItemBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(article: Article){
-            binding.tvTitle.text = article.title
-            binding.tvDescription.text = article.description
-            binding.tvSource.text = article.source.name
-            binding.tvPublishedAt.text = article.publishedAt
-            Glide.with(binding.ivArticleImage.context)
-                .load(article.urlToImage)
-                .into(binding.ivArticleImage)
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val binding = NewsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return NewsViewHolder(binding)
@@ -51,5 +40,31 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    inner class NewsViewHolder(private val binding: NewsListItemBinding) : RecyclerView.ViewHolder(binding.root){
+        fun bind(article: Article){
+            binding.tvTitle.text = article.title
+            binding.tvDescription.text = article.description
+            binding.tvSource.text = article.source?.name
+            binding.tvPublishedAt.text = article.publishedAt
+            Glide.with(binding.ivArticleImage.context)
+                .load(article.urlToImage)
+                .into(binding.ivArticleImage)
+
+            binding.root.setOnClickListener {
+                onItemClickListener?.let {
+                    it(article)
+                }
+            }
+        }
+    }
+
+    // provide Article object of list item
+    private var onItemClickListener : ((Article) -> Unit)? = null
+
+    // setter fun
+    fun setOnItemClickListener(listener: (Article) -> Unit){
+        onItemClickListener = listener
     }
 }
