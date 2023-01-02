@@ -1,5 +1,6 @@
 package com.example.newsapiclient.presentation
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -125,25 +126,26 @@ class NewsFragment : Fragment() {
     }
 
     fun viewSearchedNews(){
-        viewModel.searchedNews.observe(viewLifecycleOwner){response->
-            when(response) {
-                is Resource.Success->{
-                    hideProgressBar()
-                    response.data?.let {
-                        newsAdapter.differ.submitList(it.articles.toList())
+        if (view != null){
+            viewModel.searchedNews.observe(viewLifecycleOwner){response->
+                when(response) {
+                    is Resource.Success->{
+                        hideProgressBar()
+                        response.data?.let {
+                            newsAdapter.differ.submitList(it.articles.toList())
+                        }
                     }
-                }
-                is Resource.Error->{
-                    hideProgressBar()
-                    response.message?.let {
-                        Toast.makeText(activity, "An error occurred $it", Toast.LENGTH_LONG)
+                    is Resource.Error->{
+                        hideProgressBar()
+                        response.message?.let {
+                            Toast.makeText(activity, "An error occurred $it", Toast.LENGTH_LONG)
+                        }
                     }
-                }
-                is Resource.Loading->{
-                    showProgressBar()
+                    is Resource.Loading->{
+                        showProgressBar()
+                    }
                 }
             }
         }
     }
-
 }

@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class NewsViewModelFactoryModule {
+class FactoryModule {
 
     @Singleton
     @Provides
@@ -23,12 +23,14 @@ class NewsViewModelFactoryModule {
         getNewsHeadlinesUseCase: GetNewsHeadlinesUseCase,
         getSearchedNewsUseCase: GetSearchedNewsUseCase,
         saveNewsUseCase: SaveNewsUseCase,
+        getSavedNewsUseCase: GetSavedNewsUseCase
     ): NewsViewModelFactory{
         return NewsViewModelFactory(
             app,
             getNewsHeadlinesUseCase,
             getSearchedNewsUseCase,
-            saveNewsUseCase
+            saveNewsUseCase,
+            getSavedNewsUseCase
         )
     }
 }
